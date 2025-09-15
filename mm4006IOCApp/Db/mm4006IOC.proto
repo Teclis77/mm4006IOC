@@ -1,0 +1,63 @@
+#################################################
+# ###                                       ### #
+# ### StreamDevice Protocol for             ### #
+# ### Newport - MM4006                      ### #
+# ###                                       ### #
+# ### author: D. Hampai - M. Montis         ### #
+# ###                                       ### #
+# ### Ref 1.0; 2025-09-11		    ### #
+#################################################
+
+###################
+# ### Globals ### #
+###################
+
+#Terminator = CR LF;
+Terminator = LF;
+#Terminator=CR;
+ReplyTimeout=1000;
+ReadTimeout=1000;
+#
+#       Protocols
+#
+##
+#       Discard Extra Inputs
+#	IF NECESSARY
+##
+#ExtraInput = Ignore;
+getModel {
+	out "VE";
+#	in "\$1VE MM4006 Controller Version  %s";
+	in "%28c  %s";
+}
+getError {
+	out "TE";
+	in "TE%s";
+}
+getStatus {
+	out "\$1 MS";
+	in "\$1MS%s";
+}
+setStatus {
+        out "\$1 %{MF|MO}";
+}
+getMoving {
+        out "TS";
+        in "%s";
+}
+getPos {
+	out "\$1 TP";
+	in "\$1TP%f";
+}
+setInit {
+	out "\$1 \$2";
+}
+setHoming {
+        out "\$1 PA 0.0";
+}
+setMovAbs {
+	out "\$1PA%f";
+}
+setMovRel {
+	out "\$1PR%f";
+}

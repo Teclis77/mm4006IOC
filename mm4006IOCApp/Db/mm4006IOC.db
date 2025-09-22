@@ -15,8 +15,8 @@ record(stringin, "$(MOT):model") {
 	field(INP, "@mm4006IOC.proto getModel() $(ASYNPORT)")
 	field(PINI, "YES")
 }
-record(stringin, "$(MOT):err_$(card)") {
-        field(DESC, "Get Error $(card)")
+record(stringin, "$(MOT):err_$(card)_$(axis)") {
+        field(DESC, "Get Error $(card) $(axis)")
         field(SCAN, "Passive")
         field(DTYP, "stream")
         field(INP, "@mm4006IOC.proto getError() $(ASYNPORT)")
@@ -41,7 +41,7 @@ record(stringin, "$(MOT):status_$(card)_$(axis)") {
 }
 record(seq, "$(MOT):evalstatus_$(card)_$(axis)") {
         field(DO0, "1")
-        field(LNK0, "$(MOT):err_$(card)")
+        field(LNK0, "$(MOT):err_$(card)_$(axis)")
         field(DOL1, "1")
         field(LNK1, "$(MOT):status_$(card)_$(axis).PROC")
 }
@@ -63,14 +63,14 @@ record(bo, "$(MOT):motor_$(card)_$(axis)") {
 }
 record(seq, "$(MOT):evalmotor_$(card)_$(axis)") {
         field(DO0, "1")
-        field(LNK0, "$(MOT):err_$(card)")
+        field(LNK0, "$(MOT):err_$(card)_$(axis)")
         field(DOL1, "$(MOT):reqmotor_$(card)_$(axis).VAL")
         field(LNK1, "$(MOT):motor_$(card)_$(axis)")
         field(DO2, "1")
         field(LNK2, "$(MOT):motor_$(card)_$(axis).PROC")
         field(DLY2, "1")
         field(DO3, "1")
-        field(LNK3, "$(MOT):err_$(card)")
+        field(LNK3, "$(MOT):err_$(card)_$(axis)")
         field(DO4, "1")
         field(LNK4, "$(MOT):status_$(card)_$(axis).PROC")
 }
@@ -92,7 +92,7 @@ record(stringin, "$(MOT):moving_$(card)_$(axis)") {
 }
 record(seq, "$(MOT):evalmoving_$(card)_$(axis)") {
         field(DO0, "1")
-        field(LNK0, "$(MOT):err_$(card)")
+        field(LNK0, "$(MOT):err_$(card)_$(axis)")
         field(DOL1, "1")
         field(LNK1, "$(MOT):moving_$(card)_$(axis).PROC")
 }
@@ -115,7 +115,7 @@ record(ai, "$(MOT):pos_$(card)_$(axis)") {
 }
 record(seq, "$(MOT):evalpos_$(card)_$(axis)") {
 	field(DO0, "1")
-        field(LNK0, "$(MOT):err_$(card)")
+        field(LNK0, "$(MOT):err_$(card)_$(axis)")
 	field(DOL1, "1")
         field(LNK1, "$(MOT):pos_$(card)_$(axis).PROC")
 }
@@ -137,7 +137,7 @@ record(ai, "$(MOT):init_$(card)_$(axis)") {
 }
 record(seq, "$(MOT):evalinit_$(card)_$(axis)") {
         field(DO0, "1")
-        field(LNK0, "$(MOT):err_$(card)")
+        field(LNK0, "$(MOT):err_$(card)_$(axis)")
         field(DOL1, "1")
         field(LNK1, "$(MOT):init_$(card)_$(axis).PROC")
 }
@@ -159,7 +159,7 @@ record(ai, "$(MOT):home_$(card)_$(axis)") {
 }
 record(seq, "$(MOT):evalhome_$(card)_$(axis)") {
         field(DO0, "1")
-        field(LNK0, "$(MOT):err_$(card)")
+        field(LNK0, "$(MOT):err_$(card)_$(axis)")
         field(DOL1, "1")
         field(LNK1, "$(MOT):home_$(card)_$(axis).PROC")
 }
@@ -180,14 +180,14 @@ record(ao, "$(MOT):ma_$(card)_$(axis)") {
 }
 record(seq,"$(MOT):evalma_$(card)_$(axis)") {
 	field(DO0, "1")
-        field(LNK0, "$(MOT):err_$(card)")
+        field(LNK0, "$(MOT):err_$(card)_$(axis)")
 	field(DOL1, "$(MOT):setma_$(card)_$(axis).VAL")
         field(LNK1, "$(MOT):ma_$(card)_$(axis)")
 	field(DO2, "1")
         field(LNK2, "$(MOT):ma_$(card)_$(axis).PROC")
 	field(DLY2, "1")
 	field(DO3, "1")
-        field(LNK3, "$(MOT):err_$(card)")
+        field(LNK3, "$(MOT):err_$(card)_$(axis)")
 	field(DO4, "1")
         field(LNK4, "$(MOT):pos_$(card)_$(axis).PROC")
 }
@@ -208,14 +208,14 @@ record(ao, "$(MOT):mr_$(card)_$(axis)") {
 }
 record(seq,"$(MOT):evalmr_$(card)_$(axis)") {
         field(DO0, "1")
-        field(LNK0, "$(MOT):err_$(card)")
+        field(LNK0, "$(MOT):err_$(card)_$(axis)")
         field(DOL1, "$(MOT):setmr_$(card)_$(axis).VAL")
         field(LNK1, "$(MOT):mr_$(card)_$(axis)")
         field(DO2, "1")
         field(LNK2, "$(MOT):mr_$(card)_$(axis).PROC")
         field(DLY2, "1")
         field(DO3, "1")
-        field(LNK3, "$(MOT):err_$(card)")
+        field(LNK3, "$(MOT):err_$(card)_$(axis)")
         field(DO4, "1")
         field(LNK4, "$(MOT):pos_$(card)_$(axis).PROC")
 }

@@ -43,7 +43,7 @@ setStatus {
 }
 getMoving {
         out "TS";
-        in "%s";
+        in "TS%s";
 }
 getPos {
 	out "\$1 TP";

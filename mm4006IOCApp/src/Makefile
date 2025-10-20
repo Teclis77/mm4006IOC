@@ -40,6 +40,14 @@ mm4006IOC_SRCS_vxWorks += -nil-
 # Add support from base/src/vxWorks if needed
 #mm4006IOC_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
 
+# Link QSRV (pvAccess Server) if available
+ifdef EPICS_QSRV_MAJOR_VERSION
+    mm4006IOC_LIBS += qsrv
+    mm4006IOC_LIBS += $(EPICS_BASE_PVA_CORE_LIBS)
+    mm4006IOC_DBD += PVAServerRegister.dbd
+    mm4006IOC_DBD += qsrv.dbd
+endif
+
 # Finally link to the EPICS Base libraries
 mm4006IOC_LIBS += $(EPICS_BASE_IOC_LIBS)
 

@@ -24,11 +24,13 @@ mm4006IOC_DBD += base.dbd
 mm4006IOC_DBD += stream-base.dbd
 mm4006IOC_DBD += drvAsynIPPort.dbd
 mm4006IOC_DBD += asyn.dbd
+mm4006IOC_DBD += calc.dbd
 
 # Add all the support libraries needed by this IOC
 #mm4006IOC_LIBS += xxx
 mm4006IOC_LIBS += stream
 mm4006IOC_LIBS += asyn
+mm4006IOC_LIBS += calc
 
 # mm4006IOC_registerRecordDeviceDriver.cpp derives from mm4006IOC.dbd
 mm4006IOC_SRCS += mm4006IOC_registerRecordDeviceDriver.cpp

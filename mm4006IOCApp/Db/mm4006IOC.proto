@@ -49,11 +49,8 @@ getPos {
 	out "\$1 TP";
 	in "\$1TP%f";
 }
-setInit {
+setHome {
 	out "\$1 \$2";
-}
-setHoming {
-        out "\$1 PA 0.0";
 }
 setMovAbs {
 	out "\$1PA%f";

@@ -9,9 +9,9 @@
 #################################################
 
 file db/mm4006IOC.db {
-    pattern { card, axis, ASYNPORT, MOT, EGU, homing, onoff, ready }
-        { 1, 1 , "serial_mm4006_1", "mm4006_1", mm, OR, "@", "@" }
-        { 1, 2 , "serial_mm4006_1", "mm4006_1", mm, OR, "@", "@" }
-        { 1, 3 , "serial_mm4006_1", "mm4006_1", mm, OR, "@", "@" }
-        { 1, 4 , "serial_mm4006_1", "mm4006_1", grad, OR, "@", "@" }
+    pattern { card, axis, ASYNPORT, MOT, EGU, homing, MRES, direct, onoff, ready }
+        { 1, 1 , "serial_mm4006_1", "mm4006_1", mm, OR, 1, +1, "@", "@" }
+        { 1, 2 , "serial_mm4006_1", "mm4006_1", mm, OR, 1, +1, "@", "@" }
+        { 1, 3 , "serial_mm4006_1", "mm4006_1", mm, OR, 1, +1, "@", "@" }
+        { 1, 4 , "serial_mm4006_1", "mm4006_1", grad, OR, 1, +1, "@", "@" }
 }

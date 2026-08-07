@@ -1,0 +1,96 @@
+//###############################################
+//# ###                                                                         ### #
+//# ### Epics SNL Routines for                          ### #
+//# ### Action Motor Device                     ### #
+//# ###                                                                         ### #
+//# ### author: D. Hampai - M. Montis           ### #
+//# ###                                                                         ### #
+//# ### Ref 2.0; 2026-08-02                                     ### #
+//###############################################
+//#
+//
+program actionmm4006
+
+%{
+#include <math.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+#include <sys/stat.h>
+#include <errno.h>
+#include <epicsThread.h>
+#include "motor_status.h"
+#include "res_utils.h"
+
+// Dichiarazione globale della variabile MotorStatus
+MotorStatus g_motor_status;
+char g_motor_status_char;
+TotalStatus g_motor_status_opt;
+char g_motor_status_opt_char;
+}%
+//
+option +r;
+/*      PV/CA Variables
+Num     Name                    type            Associated
+1	check_err		stringin	{motor}_{card}_{axis}:err
+2	mres			float		{motor}_{card}_{axis}:mres
+3	polarity		int		{motor}_{card}_{axis}:polarity
+
+// PV/CA
+string check_err; assign check_err to "{motor}_{card}_{axis}:err"; monitor check_err;
+float mres; assign mres to "{motor}_{card}_{axis}:mres"; monitor mres;
+int polarity; assign polarity to "{motor}_{card}_{axis}:polarity"; monitor polarity;
+int reqmotor; assign reqmotor to "{motor}_{card}_{axis}:reqmotor"; monitor reqmotor;
+
+
+//Local Variables
+string lc_motor;
+string lc_card;
+string lc_axis;
+//
+ss motor_action {
+	state init {
+		when () {
+			strcpy(lc_motor,macValueGet("motor"));
+			strcpy(lc_card,macValueGet("card"));
+			strcpy(lc_axis,macValueGet("axis"));
+			printf("Action Init done\n");
+			pvGet(mres,SYNC);
+			pvGet(polarity,SYNC);
+			printf("Init Acquisition SNL for Motor %s_%s_%s\n", lc_motor, lc_card, lc_axis); 
+		} state idle
+	}
+//
+	state idle {
+// Check Actions
+		when() {
+			pvGet(reqmotor,SYNC);
+		} state idle
+// go to actions
+		when(reqmotor==1) {
+			printf("Request On/Off Motor\n");			
+		} state check_err
+	}
+//
+	state act_motor {
+		when() {
+
+			reqmotor = 0;
+			pvPut(reqmotor,SYNC);			
+		} state idle
+	}
+//
+        state check_err {
+		when(reqmotor==1) {
+			printf("Check Error in Request Mode\n");
+			pvPut(check_err, SYNC);
+		} state act_motor
+		when() {
+			printf("Check Error in State %d\n", status_mode);
+			pvPut(check_err, SYNC);
+		} state idle
+	}
+
+
+
+}

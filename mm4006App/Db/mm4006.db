@@ -1,0 +1,141 @@
+#################################################
+# ###										### #
+# ### Epics database for					### #
+# ### Newport - MM4006						### #
+# ###										### #
+# ### author: D. Hampai - M. Montis			### #
+# ###										### #
+# ### Ref 2.0; 2026-08-01					### #
+#################################################
+#
+#	Generics Motor
+#
+record(stringin, "$(MOT):model") {
+	field(DESC, "Device Version")
+	field(SCAN, "Passive")
+	field(DTYP, "stream")
+	field(INP, "@mm4006.proto getModel() $(ASYNPORT)")
+	field(PINI, "YES")
+}
+record(stringin, "$(MOT)_$(card)_$(axis):err") {
+	field(DESC, "Get Error $(card)_$(axis)")
+	field(SCAN, "Passive")
+	field(DTYP, "stream")
+	field(INP, "@mm4006.proto getError() $(ASYNPORT)")
+	field(PINI, "YES")
+}
+record(stringin, "$(MOT)_$(card)_$(axis):busy") {
+	field(DESC, "Busy $(card)_$(axis) - (0=busy, 1=ready)")
+	field(SCAN, "Passive")
+	field(VAL, "1")
+	field(PINI, "YES")
+}
+record(ao, "$(MOT)_$(card)_$(axis):mres") {
+	field(DESC, "Conversion in $(EGU)")
+	field(VAL, "$(MRES)")
+	field(PINI, "YES")
+}
+record(ao, "$(MOT)_$(card)_$(axis):polarity") {
+	field(DESC, "Motor Direction")
+	field(VAL, "$(direct)")
+	field(PINI, "YES")
+}
+#
+#       ON/OFF Motor
+#
+record(bo, "$(MOT)_$(card)_$(axis):reqmotor") {
+	field(DESC, "Request On/Off Motor $(card)_$(axis)")
+	field(FLNK, "$(MOT)_$(card)_$(axis):evalmotor")
+	field(ZNAM, "0")  # Label for state 0
+	field(ONAM, "1")  # Label for state 1
+}
+record(bo, "$(MOT)_$(card)_$(axis):motor") {
+	field(DESC, "On/Off Motor $(card)_$(axis)")
+	field(SCAN, "Passive")
+	field(DTYP, "stream")
+	field(OUT, "@mm4006.proto setStatus($(axis)) $(ASYNPORT)")
+	field(PINI, "NO")
+}
+record(seq, "$(MOT)_$(card)_$(axis):evalmotor") {
+	field(DO0, "1")
+	field(LNK0, "$(MOT)_$(card)_$(axis):err")
+	field(DOL1, "$(MOT)_$(card)_$(axis):reqmotor.VAL")
+	field(LNK1, "$(MOT)_$(card)_$(axis):motor")
+	field(DO2, "1")
+	field(LNK2, "$(MOT)_$(card)_$(axis):motor.PROC")
+	field(DLY2, "0.5")
+	field(DO3, "1")
+	field(LNK3, "$(MOT)_$(card)_$(axis):err")
+}
+record(ai, "$(MOT)_$(card)_$(axis):motor_status") {
+	field(DESC, "Motor On?")
+	field(PINI, "NO")
+}
+#
+#	Status
+#
+record(ai, "$(MOT)_$(card)_$(axis):status_mode") {
+	field(DESC, "SNL status IOC")
+	field(VAL, "0")
+	field(PINI, "YES")
+}
+record(bo, "$(MOT)_$(card)_$(axis):ask_request") {
+	field(DESC, "Request Infos from IOC")
+#	field(SCAN, ".5 second")
+	field(SCAN, "Passive")
+	field(VAL, "1")
+	field(PINI, "YES")
+	field(OUT, "$(MOT)_$(card)_$(axis):status_mode.VAL PP")
+}
+#
+record(stringin, "$(MOT)_$(card)_$(axis):ms_status") {
+	field(DESC, "Status Motor")
+	field(SCAN, "Passive")
+	field(DTYP, "stream")
+	field(INP, "@mm4006.proto getStatus($(axis)) $(ASYNPORT)")
+	field(PINI, "NO") 
+}
+record(stringin, "$(MOT)_$(card)_$(axis):ms_status_opt") {
+	field(DESC, "Status Motor Supplementary")
+	field(SCAN, "Passive")
+	field(DTYP, "stream")
+	field(INP, "@mm4006.proto getMoving() $(ASYNPORT)")
+	field(PINI, "NO")
+}
+# Limits
+record(bi, "$(MOT)_$(card)_$(axis):limit_right") {
+	field(DESC, "Right (+) travel limit")
+	field(ZNAM, "Not tripped")
+	field(ONAM, "TRIPPED!!")
+	field(ZSV, "NO_ALARM")      # Severità quando il bit è 0 (non trippato)
+	field(OSV, "MAJOR")         # Severità quando il bit è 1 (trippato)
+}
+record(bi, "$(MOT)_$(card)_$(axis):limit_left") {
+	field(DESC, "Left (-) travel limit")
+	field(ZNAM, "Not tripped")
+	field(ONAM, "TRIPPED!!")
+	field(ZSV, "NO_ALARM")      # Severità quando il bit è 0 (non trippato)
+	field(OSV, "MAJOR")         # Severità quando il bit è 1 (trippato)
+}
+# Moving
+record(bi,  "$(MOT)_$(card)_$(axis):moving") {
+        field(DESC, "Motor is moving?")
+        field(ZNAM, "Ready")
+        field(ONAM, "Moving")
+}
+# Position
+record(bo, "$(MOT)_$(card)_$(axis):reqpos") {
+	field(DESC, "Request Position")
+}
+record(ai, "$(MOT)_$(card)_$(axis):act_pos") {
+	field(DESC, "Machine Position")
+	field(SCAN, "Passive")
+	field(DTYP, "stream")
+	field(INP, "@mm4006.proto getPos($(axis)) $(ASYNPORT)")
+	field(PINI, "NO")
+}
+record(ai, "$(MOT)_$(card)_$(axis):pos") {
+	field(DESC, "Actual Position")
+	field(SCAN, "Passive")
+	field(PINI, "NO")
+}

@@ -28,7 +28,6 @@
 # Variables and paths to dependent modules:
 #MODULES = /path/to/modules
 #MYMODULE = $(MODULES)/my-module
-
 SUPPORT=$(EPICS_BASE)/synApps_6_3/support
 ASYN=$(SUPPORT)/asyn-R4-44-2
 STREAM=$(SUPPORT)/StreamDevice-2-8-24
@@ -36,9 +35,10 @@ CALC=$(SUPPORT)/calc-R3-7-5
 
 # If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ = $(MODULES)/seq-ver
+SNCSEQ = $(SUPPORT)/sequencer-mirror-R2-2-9
 
 # EPICS_BASE should appear last so earlier modules can override stuff:
-EPICS_BASE = /home/xlabsrv2/epics
+EPICS_BASE = /home/xlabsrv11/epics
 
 # Set RULES here if you want to use build rules from somewhere
 # other than EPICS_BASE:

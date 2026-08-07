@@ -11,9 +11,9 @@ include $(TOP)/configure/CONFIG
 # Create and install (or just install) into <top>/db
 # databases, templates, substitutions like this
 #DB += xxx.db
-DB += mm4006IOC.proto
-DB += mm4006IOC.db
-DB += mm4006IOC.val
+DB += mm4006.proto
+DB += mm4006.db
+DB += mm4006.val
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add

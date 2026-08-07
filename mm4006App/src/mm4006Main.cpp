@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: EPICS
 
-/* mm4006IOCMain.cpp */
+/* mm4006Main.cpp */
 /* Author:  Marty Kraimer Date:    17MAR2000 */
 
 #include <stddef.h>

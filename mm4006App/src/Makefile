@@ -49,6 +49,7 @@ ifneq ($(SNCSEQ),)
 	mm4006_SNCFLAGS += +r
 	mm4006_DBD += sncmm4006.dbd
 	mm4006_SRCS += mm4006.stt
+	mm4006_SRCS += action.stt
 	mm4006_SRCS += motor_status.c
 	mm4006_SRCS += res_utils.c
 	mm4006_LIBS += seq pv

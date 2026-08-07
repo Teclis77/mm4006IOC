@@ -36,3 +36,4 @@ iocInit
 ## Start any sequence programs
 #seq sncxxx,"user=xlabsrv11"
 seq sncmm4006,"user=xena,server=xlabsrv11,motor=mm4006_1,card=1,axis=1"
+seq actionmm4006,"user=xena,server=xlabsrv11,motor=mm4006_1,card=1,axis=1"

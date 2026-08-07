@@ -45,7 +45,7 @@ record(ao, "$(MOT)_$(card)_$(axis):polarity") {
 #
 record(bo, "$(MOT)_$(card)_$(axis):reqmotor") {
 	field(DESC, "Request On/Off Motor $(card)_$(axis)")
-	field(FLNK, "$(MOT)_$(card)_$(axis):evalmotor")
+#	field(FLNK, "$(MOT)_$(card)_$(axis):evalmotor")
 	field(ZNAM, "0")  # Label for state 0
 	field(ONAM, "1")  # Label for state 1
 }
@@ -56,17 +56,17 @@ record(bo, "$(MOT)_$(card)_$(axis):motor") {
 	field(OUT, "@mm4006.proto setStatus($(axis)) $(ASYNPORT)")
 	field(PINI, "NO")
 }
-record(seq, "$(MOT)_$(card)_$(axis):evalmotor") {
-	field(DO0, "1")
-	field(LNK0, "$(MOT)_$(card)_$(axis):err")
-	field(DOL1, "$(MOT)_$(card)_$(axis):reqmotor.VAL")
-	field(LNK1, "$(MOT)_$(card)_$(axis):motor")
-	field(DO2, "1")
-	field(LNK2, "$(MOT)_$(card)_$(axis):motor.PROC")
-	field(DLY2, "0.5")
-	field(DO3, "1")
-	field(LNK3, "$(MOT)_$(card)_$(axis):err")
-}
+#record(seq, "$(MOT)_$(card)_$(axis):evalmotor") {
+#	field(DO0, "1")
+#	field(LNK0, "$(MOT)_$(card)_$(axis):err")
+#	field(DOL1, "$(MOT)_$(card)_$(axis):reqmotor.VAL")
+#	field(LNK1, "$(MOT)_$(card)_$(axis):motor")
+#	field(DO2, "1")
+#	field(LNK2, "$(MOT)_$(card)_$(axis):motor.PROC")
+#	field(DLY2, "0.5")
+#	field(DO3, "1")
+#	field(LNK3, "$(MOT)_$(card)_$(axis):err")
+#}
 record(ai, "$(MOT)_$(card)_$(axis):motor_status") {
 	field(DESC, "Motor On?")
 	field(PINI, "NO")
@@ -139,3 +139,42 @@ record(ai, "$(MOT)_$(card)_$(axis):pos") {
 	field(SCAN, "Passive")
 	field(PINI, "NO")
 }
+# Home
+record(bo, "$(MOT)_$(card)_$(axis):reqhome") {
+	field(DESC, "Request Homing $(card)_$(axis)")
+	field(ZNAM, "0")  # Label for state 0
+	field(ONAM, "1")  # Label for state 1
+	field(PINI, "NO")
+}
+record(ai, "$(MOT)_$(card)_$(axis):home") {
+        field(DESC, "Homing $(card)_$(axis)")
+        field(SCAN, "Passive")
+        field(DTYP, "stream")
+        field(INP, "@mm4006.proto setHome($(axis),$(homing)) $(ASYNPORT)")
+        field(PINI, "NO")
+}
+# Move Absolute
+record(ao, "$(MOT)_$(card)_$(axis):setma") {
+	field(DESC, "Set Move Absolute $(card)_$(axis)")
+	field(PINI, "NO")
+}
+record(ao, "$(MOT)_$(card)_$(axis):ma") {
+	field(DESC, "Move Absolute $(card)_$(axis)")
+	field(SCAN, "Passive")
+	field(DTYP, "stream")
+	field(OUT, "@mm4006.proto setMovAbs($(axis)) $(ASYNPORT)")
+	field(PINI, "NO")
+}
+# Move Relative
+record(ao, "$(MOT)_$(card)_$(axis):setmr") {
+        field(DESC, "Set Move Relative $(card)_$(axis)")
+        field(PINI, "NO")
+}
+record(ao, "$(MOT)_$(card)_$(axis):mr") {
+        field(DESC, "Move Relative $(card)_$(axis)")
+        field(SCAN, "Passive")
+        field(DTYP, "stream")
+        field(OUT, "@mm4006.proto setMovRel($(axis)) $(ASYNPORT)")
+        field(PINI, "NO")
+}
+

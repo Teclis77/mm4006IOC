@@ -40,6 +40,13 @@ record(ao, "$(MOT)_$(card)_$(axis):polarity") {
 	field(VAL, "$(direct)")
 	field(PINI, "YES")
 }
+record(bo, "$(MOT)_$(card)_$(axis):stop") {
+	field(DESC, "Emergency Stop")
+	field(SCAN, "Passive")
+	field(DTYP, "stream")
+	field(OUT, "@mm4006.proto setStop($(axis)) $(ASYNPORT)")
+	field(PINI, "NO")
+}
 #
 #       ON/OFF Motor
 #
@@ -176,5 +183,17 @@ record(ao, "$(MOT)_$(card)_$(axis):mr") {
         field(DTYP, "stream")
         field(OUT, "@mm4006.proto setMovRel($(axis)) $(ASYNPORT)")
         field(PINI, "NO")
+}
+# Velocity
+record(ao, "$(MOT)_$(card)_$(axis):setve") {
+	field(DESC, "Set Velocity $(card)_$(axis)")
+	field(PINI, "NO")
+}
+record(ao, "$(MOT)_$(card)_$(axis):vel") {
+	field(DESC, "Velocity $(card)_$(axis)")
+	field(SCAN, "Passive")
+	field(DTYP, "stream")
+	field(OUT, "@mm4006.proto setVel($(axis)) $(ASYNPORT)")
+	field(PINI, "NO")
 }
 

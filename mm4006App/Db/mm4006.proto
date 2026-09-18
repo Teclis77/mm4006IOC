@@ -58,3 +58,13 @@ setMovAbs {
 setMovRel {
 	out "\$1PR%f";
 }
+setStop {
+	out "\$1ST";
+}
+setVel {
+	out "\$1VA%f";
+}
+getVel {
+	out "\$1DV";
+	in "\$1DV%f";
+}

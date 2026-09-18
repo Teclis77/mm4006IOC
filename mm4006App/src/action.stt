@@ -43,6 +43,8 @@ Num     Name                    type            Associated
 10	ma			float		{motor}_{card}_{axis}:ma
 11	setmr			float		{motor}_{card}_{axis}:setmr
 12	mr			float		{motor}_{card}_{axis}:mr
+13	setvel			float		{motor}_{card}_{axis}:setve
+14	vel			float		{motor}_{card}_{axis}:vel
 */
 // PV/CA
 string check_err_act; assign check_err_act to "{motor}_{card}_{axis}:err"; monitor check_err_act;
@@ -56,14 +58,18 @@ float setma; assign setma to "{motor}_{card}_{axis}:setma"; monitor setma;
 float ma; assign ma to "{motor}_{card}_{axis}:ma"; monitor ma;
 float setmr; assign setmr to "{motor}_{card}_{axis}:setmr"; monitor setmr;
 float mr; assign mr to "{motor}_{card}_{axis}:mr"; monitor mr;
+float setvel; assign setvel to "{motor}_{card}_{axis}:setve"; monitor setvel;
+float vel; assign vel to "{motor}_{card}_{axis}:vel"; monitor vel;
 //Local Variables
 int status_controller;
 int status_ma;
 int status_mr;
+int status_vel;
 float ma_mres;
 float mr_mres;
 float setma_prev;
 float setmr_prev;
+float setvel_prev;
 string lc_motor;
 string lc_card;
 string lc_axis;
@@ -80,6 +86,7 @@ ss motor_action {
 			printf("Init Action-SNL for Motor %s_%s_%s\n", lc_motor, lc_card, lc_axis);
 			setma_prev = setma;
 			setmr_prev = setmr;
+			setvel_prev = setvel;
 		} state idle
 	}
 //
@@ -102,6 +109,11 @@ ss motor_action {
 			setmr_prev = setmr;
 			status_mr = 1;
 		} state check_err
+		when(setvel != setvel_prev) {
+			printf("Vel for %s_%s_%s=%.3f\n", lc_motor, lc_card, lc_axis, setvel);
+			setvel_prev = setvel;
+			status_vel = 1;
+		} state check_err
 // Check Actions
 		when() {
 			pvGet(reqmotor,SYNC);
@@ -111,6 +123,8 @@ ss motor_action {
 			pvGet(setma,SYNC);
 			epicsThreadSleep(0.1);
 			pvGet(setmr,SYNC);
+			epicsThreadSleep(0.1);
+			pvGet(setvel,SYNC);
 			epicsThreadSleep(0.5);
 		} state idle
 	}
@@ -157,6 +171,18 @@ ss motor_action {
 		} state check_err
 	}
 //
+	state act_vel {
+		when() {
+//
+//		PER LA VELOCIT° VA TOLTA LA POLARITA' -> AGGIUNGERE FUNZIONE IN .C
+//
+			vel = real_to_mech(mres,setvel,polarity);
+			pvPut(vel,SYNC);
+		} state check_err
+	}
+
+
+//
         state check_err {
 		when(reqmotor==1) {
 			printf("Check Error in Request Mode\n");
@@ -176,6 +202,11 @@ ss motor_action {
 			status_mr = 0;
 			pvPut(check_err_act,SYNC);
 		} state act_mr
+		when(status_vel==1) {
+			printf("Check Error in Velocity Mode\n");
+			status_vel = 0;
+			pvPut(check_err_act,SYNC);
+		} state act_vel
 		when() {
 			printf("Check Error in State End of Cycle\n");
 			pvPut(check_err_act,SYNC);

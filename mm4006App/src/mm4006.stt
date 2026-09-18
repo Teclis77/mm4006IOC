@@ -67,6 +67,11 @@ int mot_moving; assign mot_moving to "{motor}_{card}_{axis}:moving"; monitor mot
 int reqpos; assign reqpos to "{motor}_{card}_{axis}:reqpos"; monitor reqpos;
 float act_pos; assign act_pos to "{motor}_{card}_{axis}:act_pos"; monitor act_pos;
 float pos; assign pos to "{motor}_{card}_{axis}:pos"; monitor pos;
+// PV/CA .PROC
+int ms_status_proc; assign ms_status_proc to "{motor}_{card}_{axis}:ms_status.PROC";
+int ms_status_opt_proc; assign ms_status_opt_proc to "{motor}_{card}_{axis}:ms_status_opt.PROC";
+
+
 //Local Variables
 // int status_mode;
 string lc_motor;
@@ -115,8 +120,8 @@ ss motor_snl {
 	state check_status {
 		when () {
 //			MotorStatus ms;
-
-			pvPut(ms_status, SYNC);
+			ms_status_proc = 1;
+			pvPut(ms_status_proc, SYNC);
 			epicsThreadSleep(0.1);
 //
 	 		pvGet(ms_status, SYNC);
@@ -143,9 +148,9 @@ ss motor_snl {
 			pvPut(lim_pos,SYNC);
 			lim_neg = g_motor_status.limit_left;
 			pvPut(lim_neg,SYNC);
-			/* Oppure debug rapido
+			/* Oppure debug rapido */
 			sprintf(motor_name,"Motor%s", lc_axis);
-			print_motor_status(motor_name, motor_status_char); */
+			print_motor_status(motor_name, motor_status_char);
 			status_mode=2;
 			pvPut(status_mode,SYNC);
 //			print_motor_status("Motor1", motor_status_char);
@@ -154,14 +159,21 @@ ss motor_snl {
 // motor_status_opt_char
 	state check_status_opt {
 		when() {
-			pvPut(ms_status_opt,SYNC);
+			ms_status_opt_proc = 1;
+			pvPut(ms_status_opt_proc,SYNC);
 			epicsThreadSleep(0.1);
 //
 			pvGet(ms_status_opt,SYNC);
-			g_motor_status_opt_char = ms_status_opt[0];
+			motor_status_opt_char = ms_status_opt[0];
+//
+//	Da Togliere... solo come prova per debug
+//
+//			printf("DEBUG TS raw string: '%s' primo char: 0x%02X (%d)\n", ms_status_opt, 
+//				(unsigned char)ms_status_opt[0], 
+//				(unsigned char)ms_status_opt[0]);
 //			g_motor_status_opt_char = (char)ms_status_opt;
 //
-			parse_total_status(g_motor_status_opt_char, &g_motor_status_opt);
+			parse_total_status(motor_status_opt_char, &g_motor_status_opt);
 //
 			if (lc_axis == 1) {
 				mot_moving = g_motor_status_opt.axis1_moving;
@@ -174,8 +186,8 @@ ss motor_snl {
 			}
 			pvPut(mot_moving,SYNC);
 //
-			/* Oppure debug rapido
-			print_total_status(motor_status_opt_char);*/
+			/* Oppure debug rapido */
+			print_total_status(motor_status_opt_char);
 			status_mode=3;
 			pvPut(status_mode,SYNC);
 		} state check_err

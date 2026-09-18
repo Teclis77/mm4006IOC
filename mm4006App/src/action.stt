@@ -98,7 +98,8 @@ ss motor_action {
 		} state check_err
 		when(setmr != setmr_prev) {
 			printf("Move Rel for %s_%s_%s=%.3f\n", lc_motor, lc_card, lc_axis, setmr);
-			setmr_prev = 0;
+//			setmr_prev = 0;
+			setmr_prev = setmr;
 			status_mr = 1;
 		} state check_err
 // Check Actions
@@ -150,6 +151,9 @@ ss motor_action {
 		when() {
 			mr = real_to_mech(mres,setmr,polarity);
 			pvPut(mr,SYNC);
+			setmr = 0;
+			pvPut(setmr,SYNC);
+			setmr_prev = 0;
 		} state check_err
 	}
 //

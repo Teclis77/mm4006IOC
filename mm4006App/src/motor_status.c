@@ -38,7 +38,7 @@ int parse_motor_status(char c, MotorStatus *ms)
 
     byte = (unsigned char)c;
 
-	printf("Debug in motor_status.c: Char %c, Byte %c\n", c, byte);
+//	printf("Debug in motor_status.c: Char %c, Byte %c\n", c, byte);
 
     ms->raw          = byte;
 
@@ -173,7 +173,7 @@ int parse_total_status(char c, TotalStatus *ts)
     byte = (unsigned char)c;
     ts->raw = byte;
 
-	printf("Debug in motor_status.c: Char %c, Byte %c\n", c, byte);
+//	printf("Debug in motor_status.c: Char %c, Byte %c\n", c, byte);
 
     /* Bit 0..3: stato assi 1..4 (0=fermo, 1=in moto) */
     ts->axis1_moving = (byte & TS_BIT_AXIS1_MOVING) ? 1 : 0;

@@ -1,12 +1,12 @@
-#################################################
-# ###										### #
-# ### Epics database for					### #
-# ### Newport - MM4006						### #
-# ###										### #
-# ### author: D. Hampai - M. Montis			### #
-# ###										### #
-# ### Ref 2.0; 2026-08-01					### #
-#################################################
+#####################################################
+# ###						### #
+# ### Epics database for			### #
+# ### Newport - MM4006				### #
+# ###						### #
+# ### author: D. Hampai - M. Montis		### #
+# ###						### #
+# ### Ref 2.0; 2026-08-01			### #
+#####################################################
 #
 #	Generics Motor
 #
@@ -194,6 +194,21 @@ record(ao, "$(MOT)_$(card)_$(axis):vel") {
 	field(SCAN, "Passive")
 	field(DTYP, "stream")
 	field(OUT, "@mm4006.proto setVel($(axis)) $(ASYNPORT)")
+	field(PINI, "NO")
+}
+record(bo, "$(MOT)_$(card)_$(axis):reqvel") {
+	field(DESC, "Request Velocity")
+}
+record(ai, "$(MOT)_$(card)_$(axis):act_vel") {
+	field(DESC, "Machine Velocity")
+	field(SCAN, "Passive")
+	field(DTYP, "stream")
+	field(INP, "@mm4006.proto getVel($(axis)) $(ASYNPORT)")
+	field(PINI, "NO")
+}
+record(ai, "$(MOT)_$(card)_$(axis):real_vel") {
+	field(DESC, "Actual Velocity")
+	field(SCAN, "Passive")
 	field(PINI, "NO")
 }
 

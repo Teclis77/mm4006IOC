@@ -47,6 +47,9 @@ Num	Name			type		Associated
 12	reqpos			int		{motor}_{card}_{axis}:reqpos
 13	atc_pos			float		{motor}_{card}_{axis}:act_pos
 14	pos			float		{motor}_{card}_{axis}:pos
+15	reqvel			int		{motor}_{card}_{axis}:reqvel
+16	act_vel			float		{motor}_{card}_{axis}:act_vel
+17	real_vel		float		{motor}_{card}_{axis}:real_vel
 */
 
 /*	Local Variables
@@ -67,6 +70,10 @@ int mot_moving; assign mot_moving to "{motor}_{card}_{axis}:moving"; monitor mot
 int reqpos; assign reqpos to "{motor}_{card}_{axis}:reqpos"; monitor reqpos;
 float act_pos; assign act_pos to "{motor}_{card}_{axis}:act_pos"; monitor act_pos;
 float pos; assign pos to "{motor}_{card}_{axis}:pos"; monitor pos;
+int reqvel; assign reqvel to "{motor}_{card}_{axis}:reqvel"; monitor reqvel;
+float act_vel; assign act_vel to "{motor}_{card}_{axis}:act_vel"; monitor act_vel;
+float real_vel; assign real_vel to "{motor}_{card}_{axis}:real_vel"; monitor real_vel;
+
 // PV/CA .PROC
 int ms_status_proc; assign ms_status_proc to "{motor}_{card}_{axis}:ms_status.PROC";
 int ms_status_opt_proc; assign ms_status_opt_proc to "{motor}_{card}_{axis}:ms_status_opt.PROC";
@@ -82,6 +89,7 @@ char motor_status_char;
 char motor_status_opt_char;
 string motor_name;
 int ismoving;
+float get_pol;
 //
 //
 ss motor_snl {
@@ -95,6 +103,7 @@ ss motor_snl {
 			printf("Init done\n");
 			pvGet(mres,SYNC);
 			pvGet(polarity,SYNC);
+			get_pol = 1;
 		} state idle
 	}
 //
@@ -108,6 +117,11 @@ ss motor_snl {
 		when(reqpos==1) {
 			printf("Request Position\n");
 			status_mode=3;
+			pvPut(status_mode,SYNC);
+		} state check_err
+		when(reqvel==1) {
+			printf("Request Velocity\n");
+			status_mode=4;
 			pvPut(status_mode,SYNC);
 		} state check_err
 		when() {
@@ -192,26 +206,38 @@ ss motor_snl {
 			pvPut(status_mode,SYNC);
 		} state check_err
 	}
-// float real_to_mech(float mres, float real. int dir)
 	state check_position {
 		when() {
 			pvPut(act_pos,SYNC);
 			epicsThreadSleep(0.1);
 //
 			pvGet(act_pos,SYNC);
-			pos = mech_to_real(mres,act_pos,polarity);
+//			pos = mech_to_real(mres,act_pos,polarity);
+			pos = mech_to_real(mres,act_pos,get_pol);
 			printf("The position is %.3f\n", pos);
 			pvPut(pos,SYNC);
 			reqpos=0;
 			pvPut(reqpos,SYNC);
+//			status_mode=0;
+			status_mode=4;
+			pvPut(status_mode,SYNC);
+		} state check_err
+	}
+	state check_velocity {
+		when() {
+			pvPut(act_vel,SYNC);
+			epicsThreadSleep(0.1);
+//
+			pvGet(act_vel,SYNC);
+			real_vel = mech_to_real(mres,act_vel,get_pol);
+			printf("The velocity is %.3f\n", real_vel);
+			pvPut(real_vel,SYNC);
+			reqvel=0;
+			pvPut(reqvel,SYNC);
 			status_mode=0;
 			pvPut(status_mode,SYNC);
 		} state check_err
 	}
-// status_mode=0;
-// pvPut(status_mode,SYNC);
-
-
 	state check_err {
 		when(status_mode==1) {
 			printf("Check Error in State %d\n", status_mode);
@@ -225,6 +251,10 @@ ss motor_snl {
 			printf("Check Error in State %d\n", status_mode);
 			pvPut(check_err, SYNC);
 		} state check_position
+		when(status_mode==4) {
+			printf("Check Error in State %d\n", status_mode);
+			pvPut(check_err, SYNC);
+		} state check_velocity
 		when() {
 			printf("Check Error in State %d\n", status_mode);
 			pvPut(check_err, SYNC);

@@ -39,12 +39,12 @@ Num     Name                    type            Associated
 5	motor			int		{motor}_{card}_{axis}:motor
 6	reqhome			int		{motor}_{card}_{axis}:reqhome
 7	home			int		{motor}_{card}_{axis}:home
-9	setma			float		{motor}_{card}_{axis}:setma
-10	ma			float		{motor}_{card}_{axis}:ma
-11	setmr			float		{motor}_{card}_{axis}:setmr
-12	mr			float		{motor}_{card}_{axis}:mr
-13	setvel			float		{motor}_{card}_{axis}:setve
-14	vel			float		{motor}_{card}_{axis}:vel
+8	setma			float		{motor}_{card}_{axis}:setma
+9	ma			float		{motor}_{card}_{axis}:ma
+10	setmr			float		{motor}_{card}_{axis}:setmr
+11	mr			float		{motor}_{card}_{axis}:mr
+12	setvel			float		{motor}_{card}_{axis}:setve
+13	vel			float		{motor}_{card}_{axis}:vel
 */
 // PV/CA
 string check_err_act; assign check_err_act to "{motor}_{card}_{axis}:err"; monitor check_err_act;
@@ -70,6 +70,7 @@ float mr_mres;
 float setma_prev;
 float setmr_prev;
 float setvel_prev;
+float vel_pol;
 string lc_motor;
 string lc_card;
 string lc_axis;
@@ -176,7 +177,8 @@ ss motor_action {
 //
 //		PER LA VELOCIT° VA TOLTA LA POLARITA' -> AGGIUNGERE FUNZIONE IN .C
 //
-			vel = real_to_mech(mres,setvel,polarity);
+			vel_pol = 1.0;
+			vel = real_to_mech(mres,setvel,vel_pol);
 			pvPut(vel,SYNC);
 		} state check_err
 	}

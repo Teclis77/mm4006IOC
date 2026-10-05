@@ -35,6 +35,11 @@ record(ao, "$(MOT)_$(card)_$(axis):mres") {
 	field(VAL, "$(MRES)")
 	field(PINI, "YES")
 }
+record(stringout, "$(MOT)_$(card)_$(axis):egu") {
+	field(DESC, "Unity")
+	field(VAL, "$(EGU)")
+	field(PINI, "YES")
+}
 record(ao, "$(MOT)_$(card)_$(axis):polarity") {
 	field(DESC, "Motor Direction")
 	field(VAL, "$(direct)")
@@ -63,17 +68,6 @@ record(bo, "$(MOT)_$(card)_$(axis):motor") {
 	field(OUT, "@mm4006.proto setStatus($(axis)) $(ASYNPORT)")
 	field(PINI, "NO")
 }
-#record(seq, "$(MOT)_$(card)_$(axis):evalmotor") {
-#	field(DO0, "1")
-#	field(LNK0, "$(MOT)_$(card)_$(axis):err")
-#	field(DOL1, "$(MOT)_$(card)_$(axis):reqmotor.VAL")
-#	field(LNK1, "$(MOT)_$(card)_$(axis):motor")
-#	field(DO2, "1")
-#	field(LNK2, "$(MOT)_$(card)_$(axis):motor.PROC")
-#	field(DLY2, "0.5")
-#	field(DO3, "1")
-#	field(LNK3, "$(MOT)_$(card)_$(axis):err")
-#}
 record(ai, "$(MOT)_$(card)_$(axis):motor_status") {
 	field(DESC, "Motor On?")
 	field(PINI, "NO")
@@ -88,7 +82,6 @@ record(ai, "$(MOT)_$(card)_$(axis):status_mode") {
 }
 record(bo, "$(MOT)_$(card)_$(axis):ask_request") {
 	field(DESC, "Request Infos from IOC")
-#	field(SCAN, ".5 second")
 	field(SCAN, "Passive")
 	field(VAL, "1")
 	field(PINI, "YES")

@@ -1,4 +1,4 @@
-#include “../mm4006.stt”
+#include “../status.stt”
 #include “../action.stt”
 
 /*
